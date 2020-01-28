@@ -1,9 +1,12 @@
 const express = require("express");
 const mongo = require("mongodb").MongoClient;
 const bodyParser = require("body-parser");
+const session = require("express-session");
+const passport = require("passport");
 const cors = require("cors");
 require("dotenv").config();
 
+const auth = require("./auth");
 const routes = require("./routes");
 
 const app = express();
@@ -28,6 +31,16 @@ app.use(
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(
+  session({
+    secret: "pleasedonttellanybodyaboutthis",
+    resave: true,
+    saveUninitialized: true
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
+
 mongo.connect(process.env.MONGO_URI, (err, client) => {
   //client returned
   if (err) {
@@ -38,7 +51,7 @@ mongo.connect(process.env.MONGO_URI, (err, client) => {
     //create a database object from the client object
     var db = client.db("jetcake");
 
-    // auth(app, db);
+    auth(app, db);
 
     routes(app, db);
 
