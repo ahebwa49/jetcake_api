@@ -4,10 +4,12 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 require("dotenv").config();
 
+const routes = require("./routes");
+
 const app = express();
 
 app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "http://localhost:3001");
+  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
@@ -18,7 +20,7 @@ app.use(function(req, res, next) {
 
 app.use(
   cors({
-    origin: ["http://localhost:3001"], // restrict calls to those this address
+    origin: ["http://localhost:3000"], // restrict calls to those this address
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE" // allow all requests
   })
 );
@@ -34,7 +36,7 @@ mongo.connect(process.env.MONGO_URI, (err, client) => {
     console.log("Successful database connection");
 
     //create a database object from the client object
-    var db = client.db("swipe2pay");
+    var db = client.db("jetcake");
 
     // auth(app, db);
 
