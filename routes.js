@@ -70,6 +70,15 @@ module.exports = function(app, db) {
     })(req, res, next);
   });
 
+  app.route("/profile").get((req, res) => {
+    if (req.user) {
+      console.log("Authenticated on navigating to profile");
+      return res.json(req.user);
+    } else {
+      console.log("Not Authenticated on navigating to profile");
+    }
+  });
+
   app.route("/logout").get((req, res) => {
     if (req.isAuthenticated()) {
       console.log("Authenticated just before logout");
