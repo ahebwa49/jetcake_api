@@ -7,10 +7,6 @@ module.exports = function(app, db) {
     res.send("Welcome to jetcake REST authentication API");
   });
 
-  app.route("/login").post((req, res, next) => {
-    console.log("signin endpoint has been hit");
-  });
-
   app.route("/signup").post(
     (req, res, next) => {
       console.log("signup endpoint has been hit");
@@ -72,5 +68,18 @@ module.exports = function(app, db) {
         console.log(`Successful login ${req.user}`);
       });
     })(req, res, next);
+  });
+
+  app.route("/logout").get((req, res) => {
+    if (req.isAuthenticated()) {
+      console.log("Authenticated just before logout");
+      console.log(req.user);
+    } else {
+      console.log("Not authenticated before logout");
+    }
+    req.logout();
+    console.log("successfully logged out");
+    console.log(req.user);
+    res.json(req.user);
   });
 };
