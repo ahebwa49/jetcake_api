@@ -26,6 +26,13 @@ module.exports = function(app, db) {
           db.collection("users").insertOne(
             {
               username: req.body.username,
+              phoneNumber: req.body.phoneNumber,
+              address: req.body.address,
+              nickname: req.body.nickname,
+              profile: req.body.profile,
+              dateOfBirth: req.body.dateOfBirth,
+              book: req.body.book,
+              spouse: req.body.spouse,
               password: hash
             },
             (err, doc) => {
