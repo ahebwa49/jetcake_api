@@ -1,15 +1,28 @@
 const bcrypt = require("bcrypt");
 var ObjectID = require("mongodb").ObjectID;
 const passport = require("passport");
+const multer = require("multer");
+var upload = multer({ dest: "uploads/" });
 
 module.exports = function(app, db) {
   app.route("/").get((req, res) => {
     res.send("Welcome to jetcake REST authentication API");
   });
 
+  // app.route("/image").post(upload.single("avatar"), function(req, res, next) {
+  //   console.log("profile image has been uplaoded");
+  //   console.log(req.file);
+  //   console.log(req.body);
+  //   res.status(200).json(req.file);
+  //   // req.file is the `avatar` file
+  //   // req.body will hold the text fields, if there were any
+  // });
+
   app.route("/signup").post(
+    upload.single("avatar"),
     (req, res, next) => {
       console.log("signup endpoint has been hit");
+      // console.log(req.file);
       db.collection("users").findOne({ username: req.body.username }, function(
         err,
         user
@@ -22,14 +35,16 @@ module.exports = function(app, db) {
               "The email address you have entered is already associated with another account."
           });
         } else {
+          var profile = `http://localhost:4000/${req.file.filename}`;
+
           var hash = bcrypt.hashSync(req.body.password, 12);
           db.collection("users").insertOne(
             {
               username: req.body.username,
+              profile: profile,
               phoneNumber: req.body.phoneNumber,
               address: req.body.address,
               nickname: req.body.nickname,
-              profile: req.body.profile,
               dateOfBirth: req.body.dateOfBirth,
               book: req.body.book,
               spouse: req.body.spouse,

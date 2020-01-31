@@ -4,12 +4,18 @@ const bodyParser = require("body-parser");
 const session = require("express-session");
 const passport = require("passport");
 const cors = require("cors");
+const multer = require("multer");
 require("dotenv").config();
 
 const auth = require("./auth");
 const routes = require("./routes");
 
+const upload = multer({ dest: "uploads/" });
+
 const app = express();
+
+app.use(express.static("uploads"));
+// app.use("/static", express.static(path.join(__dirname, "uploads")));
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
