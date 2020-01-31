@@ -101,6 +101,59 @@ module.exports = function(app, db) {
     }
   });
 
+  app.route("/profile/edit/:id").put(upload.single("avatar"), (req, res) => {
+    console.log("update endpoint hit");
+
+    if (req.file) {
+      var profile = `http://localhost:4000/${req.file.filename}`;
+
+      db.collection("users").updateOne(
+        { _id: ObjectID(req.params.id) },
+        {
+          $set: {
+            profile: profile,
+            phoneNumber: req.body.phoneNumber,
+            address: req.body.address,
+            nickname: req.body.nickname,
+            dateOfBirth: req.body.dateOfBirth,
+            book: req.body.book,
+            spouse: req.body.spouse
+          }
+        },
+        (err, user) => {
+          if (err) {
+            return res.send(err);
+          } else {
+            console.log("one document has been updated");
+            return res.json(user);
+          }
+        }
+      );
+    } else {
+      db.collection("users").updateOne(
+        { _id: ObjectID(req.params.id) },
+        {
+          $set: {
+            phoneNumber: req.body.phoneNumber,
+            address: req.body.address,
+            nickname: req.body.nickname,
+            dateOfBirth: req.body.dateOfBirth,
+            book: req.body.book,
+            spouse: req.body.spouse
+          }
+        },
+        (err, user) => {
+          if (err) {
+            return res.send(err);
+          } else {
+            console.log("one document has been updated");
+            return res.json(user);
+          }
+        }
+      );
+    }
+  });
+
   app.route("/logout").get((req, res) => {
     if (req.isAuthenticated()) {
       console.log("Authenticated just before logout");
