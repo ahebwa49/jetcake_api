@@ -66,9 +66,10 @@ module.exports = function(app, db) {
       failureRedirect: "http://localhost:3000/register"
     }),
     (req, res, next) => {
+      const newUser = Object.assign({}, req.user, { password: null });
       console.log("successfully registered");
-      console.log(req.user);
-      res.json(req.user);
+      console.log(newUser);
+      res.json(newUser);
     }
   );
 
@@ -86,8 +87,9 @@ module.exports = function(app, db) {
         if (err) {
           return next(err);
         }
-        res.json(req.user);
-        console.log(`Successful login ${req.user}`);
+        const newUser = Object.assign({}, req.user, { password: null });
+        res.json(newUser);
+        console.log(`Successful login ${newUser}`);
       });
     })(req, res, next);
   });
@@ -95,9 +97,11 @@ module.exports = function(app, db) {
   app.route("/profile").get((req, res) => {
     if (req.user) {
       console.log("Authenticated on navigating to profile");
-      return res.json(req.user);
+      const user = Object.assign({}, req.user, { password: null });
+      return res.json(user);
     } else {
       console.log("Not Authenticated on navigating to profile");
+      return res.json(req.user);
     }
   });
 
@@ -125,7 +129,7 @@ module.exports = function(app, db) {
             return res.send(err);
           } else {
             console.log("one document has been updated");
-            return res.json(user);
+            return res.status(200).send();
           }
         }
       );
@@ -147,7 +151,7 @@ module.exports = function(app, db) {
             return res.send(err);
           } else {
             console.log("one document has been updated");
-            return res.json(user);
+            return res.status(200).send();
           }
         }
       );
