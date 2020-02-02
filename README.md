@@ -1,6 +1,6 @@
 ## Clone this repo
 
-You should first clone this backend application in your console by the running `git clone` followed by the provided web url.
+You should first clone this backend application with your console by the running `git clone` followed by the provided web url.
 
 ## Available Scripts
 
