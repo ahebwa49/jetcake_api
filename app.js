@@ -15,7 +15,6 @@ const upload = multer({ dest: "uploads/" });
 const app = express();
 
 app.use(express.static("uploads"));
-// app.use("/static", express.static(path.join(__dirname, "uploads")));
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
@@ -52,8 +51,6 @@ mongo.connect(process.env.MONGO_URI, (err, client) => {
   if (err) {
     console.log("Database error: " + err);
   } else {
-    console.log("Successful database connection");
-
     //create a database object from the client object
     var db = client.db("jetcake");
 

@@ -9,20 +9,9 @@ module.exports = function(app, db) {
     res.send("Welcome to jetcake REST authentication API");
   });
 
-  // app.route("/image").post(upload.single("avatar"), function(req, res, next) {
-  //   console.log("profile image has been uplaoded");
-  //   console.log(req.file);
-  //   console.log(req.body);
-  //   res.status(200).json(req.file);
-  //   // req.file is the `avatar` file
-  //   // req.body will hold the text fields, if there were any
-  // });
-
   app.route("/signup").post(
     upload.single("avatar"),
     (req, res, next) => {
-      console.log("signup endpoint has been hit");
-      // console.log(req.file);
       db.collection("users").findOne({ username: req.body.username }, function(
         err,
         user
@@ -67,8 +56,6 @@ module.exports = function(app, db) {
     }),
     (req, res, next) => {
       const newUser = Object.assign({}, req.user, { password: null });
-      console.log("successfully registered");
-      console.log(newUser);
       res.json(newUser);
     }
   );
@@ -89,25 +76,20 @@ module.exports = function(app, db) {
         }
         const newUser = Object.assign({}, req.user, { password: null });
         res.json(newUser);
-        console.log(`Successful login ${newUser}`);
       });
     })(req, res, next);
   });
 
   app.route("/profile").get((req, res) => {
     if (req.user) {
-      console.log("Authenticated on navigating to profile");
       const user = Object.assign({}, req.user, { password: null });
       return res.json(user);
     } else {
-      console.log("Not Authenticated on navigating to profile");
       return res.json(req.user);
     }
   });
 
   app.route("/profile/edit/:id").put(upload.single("avatar"), (req, res) => {
-    console.log("update endpoint hit");
-
     if (req.file) {
       var profile = `http://localhost:4000/${req.file.filename}`;
 
@@ -128,7 +110,6 @@ module.exports = function(app, db) {
           if (err) {
             return res.send(err);
           } else {
-            console.log("one document has been updated");
             return res.status(200).send();
           }
         }
@@ -150,7 +131,6 @@ module.exports = function(app, db) {
           if (err) {
             return res.send(err);
           } else {
-            console.log("one document has been updated");
             return res.status(200).send();
           }
         }
@@ -159,15 +139,7 @@ module.exports = function(app, db) {
   });
 
   app.route("/logout").get((req, res) => {
-    if (req.isAuthenticated()) {
-      console.log("Authenticated just before logout");
-      console.log(req.user);
-    } else {
-      console.log("Not authenticated before logout");
-    }
     req.logout();
-    console.log("successfully logged out");
-    console.log(req.user);
     res.json(req.user);
   });
 };
