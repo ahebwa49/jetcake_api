@@ -14,8 +14,7 @@ Will install all the dependecies
 
 Create a .env file and add the following environment variables. The first one is a link to the mongodb atlas cluster where the data is persisted. The other is a port where the application is running.
 
-MONGO_URI=mongodb+srv://jetcake:jetcake@jetcake-el6cq.mongodb.net/test?retryWrites=true
-\newline
+MONGO_URI=mongodb+srv://jetcake:jetcake@jetcake-el6cq.mongodb.net/test?retryWrites=true\
 PORT=4000
 
 ### `yarn dev`
