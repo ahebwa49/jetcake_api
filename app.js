@@ -1,16 +1,8 @@
 const express = require("express");
-const mongo = require("mongodb").MongoClient;
+const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const session = require("express-session");
-const passport = require("passport");
 const cors = require("cors");
-const multer = require("multer");
 require("dotenv").config();
-
-const auth = require("./auth");
-const routes = require("./routes");
-
-const upload = multer({ dest: "uploads/" });
 
 const app = express();
 
@@ -33,40 +25,24 @@ app.use(
   })
 );
 
-app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
-app.use(
-  session({
-    secret: "pleasedonttellanybodyaboutthis",
-    resave: true,
-    saveUninitialized: true
-  })
+const PORT = process.env.PORT || 3000;
+const db = mongoose.connect(
+  "mongodb+srv://jetcake:jetcake@jetcake-el6cq.mongodb.net/test?retryWrites=true"
 );
-app.use(passport.initialize());
-app.use(passport.session());
 
-mongo.connect(process.env.MONGO_URI, (err, client) => {
-  //client returned
-  if (err) {
-    console.log("Database error: " + err);
-  } else {
-    //create a database object from the client object
-    var db = client.db("jetcake");
+const User = require("./models/userModel");
 
-    auth(app, db);
+const userRouter = require("./routes/userRouter")(User);
 
-    routes(app, db);
+app.use("/api", userRouter);
 
-    app.use((req, res, next) => {
-      res
-        .status(404)
-        .type("text")
-        .send("Not Found");
-    });
+app.get("/", (req, res) => {
+  res.send("Welcome to my REST API");
+});
 
-    app.listen(process.env.PORT || 3000, () => {
-      console.log("Listening on port " + process.env.PORT);
-    });
-  }
+app.listen(PORT, () => {
+  console.log(`Running on port ${PORT}`);
 });
